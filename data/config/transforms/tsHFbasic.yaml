@@ -1,0 +1,15 @@
+name: tsHFbasic
+standardize: ${requires_standardize:${transforms.train.transforms},${transforms.val.transforms},${transforms.test.transforms}}
+train:
+  _target_: torchvision.transforms.Compose
+  transforms:
+  - _target_: modules.transforms.HFIdentity
+  
+val:
+  _target_: torchvision.transforms.Compose
+  transforms:
+  - _target_: modules.transforms.HFIdentity
+test:
+  _target_: torchvision.transforms.Compose
+  transforms:
+  - _target_: modules.transforms.HFIdentity

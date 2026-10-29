@@ -1,0 +1,56 @@
+mean: null
+std: null
+task: classification
+n_channels: 1
+n_classes: 2
+name: highFreq-nothing_ch1_specificChannels
+fs: 400
+type: timeseries
+xcols:
+- X
+ycols:
+- y
+maskcols:
+- highFreq_X
+- highFreq
+# - background_X
+# - background
+counfoundercols: []
+test:
+  _target_: modules.dataset.HFDataset
+  dataset:
+    _target_: datasets.Dataset.load_from_disk
+    dataset_path: ${dataset.train.dataset.dataset_path}
+  xcols: ${dataset.xcols}
+  ycols: ${dataset.ycols}
+train:
+  _target_: modules.dataset.HFDataset
+  dataset:
+    _target_: datasets.Dataset.load_from_disk
+    dataset_path: ${path.base_path_datasets}/synthetic/${dataset.name}
+  xcols: ${dataset.xcols}
+  ycols: ${dataset.ycols}
+val:
+  _target_: modules.dataset.HFDataset
+  dataset:
+    _target_: datasets.Dataset.load_from_disk
+    dataset_path: ${dataset.train.dataset.dataset_path}
+  xcols: ${dataset.xcols}
+  ycols: ${dataset.ycols}
+pretransform:
+  _target_: torchvision.transforms.Compose
+  transforms:
+  - _target_: modules.transforms.HFToTensor
+    fields: ${dataset.xcols} + ${dataset.ycols}
+  - _target_: modules.transforms.HFStack
+    fields: ${dataset.xcols}
+    dim: 0
+    new_name: x
+  - _target_: modules.transforms.HFCat
+    fields: ${dataset.ycols}
+    dim: 0
+    new_name: y
+  - _target_: modules.transforms.HFSelect
+    fields:
+    - x
+    - y

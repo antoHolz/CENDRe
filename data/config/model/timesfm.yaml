@@ -1,0 +1,22 @@
+name: timesfm
+type: timeseries
+object:
+  _target_: modules.models.timesfm.TimesFM
+  # General Configuration
+  dec_in: ${data.c_in}            # Number of input features
+  task: ${dataset.task} #"long_term_forecast"       # Name of the task (e.g., 'long_term_forecast', 'short_term_forecast', 'imputation', 'anomaly_detection', 'classification')
+  seq_len: ${dataset.seq_len}      # Length of the sequence
+
+  # Model Architecture
+  d_model: 1024                    # Dimension of the model
+  n_heads: 8                       # Number of attention heads
+  d_layers: 8                      # Number of decoder layers
+  d_ff: 2048                       # Dimension of feed-forward network
+  c_out: ${default:${dataset.c_out},1} # Number of output features
+  # Optional Features
+  patch_len: ${dataset.pred_len}      # Length of each patch (if use_patching is True)
+  stride: ${dataset.pred_len}         # Stride for patching (if use_patching is True)
+  dropout: 0.1                     # Dropout rate
+  use_revin: true                  # Whether to use RevIN for normalization
+  use_patching: true               # Whether to use patching
+  num_class: null                  # Number of classes (for classification task) 

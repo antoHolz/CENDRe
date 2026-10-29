@@ -1,0 +1,32 @@
+# @package _global_
+defaults:
+  - override /transforms: tsHFbasic
+  - override /loader: M
+  - override /training: adamw_patient
+  - override /path: applewood_local
+  - override /dataset: square-circle_ch1_specificChannels_conf-triangle-50-50
+
+datasets:
+  - square-circle_ch1_specificChannels_conf-triangle-40-60
+  - square-circle_ch1_specificChannels_conf-triangle-50-50
+  - square-circle_ch1_specificChannels_conf-triangle-60-40
+  - triangle-circle_ch1_specificChannels_conf-square-40-60
+  - triangle-circle_ch1_specificChannels_conf-square-50-50
+  - triangle-circle_ch1_specificChannels_conf-square-60-40
+
+seeds: [0,1,2]
+models:
+  - InceptionTime10
+  - ResNet1D18
+  - DenseNet1D121
+methods:
+  - ECLADts
+  - MultiVISION
+  - CENDREACsilhouette
+  - CENDREHDBSCAN
+  - CENDREkMeans
+n_concepts: [2,4,6,8,10]
+exp_name: syntheticLconf
+scatter_mode: all
+scatter_metric: [dst_eclad, rma]
+save_pdf: false

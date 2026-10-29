@@ -1,0 +1,16 @@
+name: basic
+standardize: ${requires_standardize:${transforms.train.transforms},${transforms.val.transforms},${transforms.test.transforms}}
+train:
+  _target_: torchvision.transforms.Compose
+  transforms:
+    - _target_: modules.transforms.tstransforms.TSToTensor
+    
+val:
+  _target_: torchvision.transforms.Compose
+  transforms:
+    - _target_: modules.transforms.tstransforms.TSToTensor
+
+test:
+  _target_: torchvision.transforms.Compose
+  transforms:
+    - _target_: modules.transforms.tstransforms.TSToTensor

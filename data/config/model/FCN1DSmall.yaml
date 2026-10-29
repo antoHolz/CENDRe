@@ -1,0 +1,15 @@
+dimensionality: 1D
+name: FCN1DSmall
+object:
+  _target_: modules.models.FCN.FCN
+  c_in: ${dataset.n_channels}
+  c_out: ${dataset.n_classes}
+  conv_dropout: 0.1
+  fc_dropout: 0.5
+  ks: 7
+  layers:
+  - 25
+  - 25
+  - 25
+  - 25
+  ndim: 1

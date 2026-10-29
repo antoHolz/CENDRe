@@ -1,0 +1,6 @@
+name: InceptionTime10_cs1
+layerDict_ec: ['model.inception_block.inception_layers.6.bottleneck','model.inception_block.inception_layers.7.bottleneck',  'model.inception_block.inception_layers.8.bottleneck', 'model.inception_block.inception_layers.9.bottleneck']
+layerDict_cn: ['model.inception_block.inception_layers.6.bottleneck','model.inception_block.inception_layers.7.bottleneck',  'model.inception_block.inception_layers.8.bottleneck', 'model.inception_block.inception_layers.9.bottleneck']
+layerDict_cs: ['model.inception_block.inception_layers.9.bottleneck']
+layerDict_mv: ['model.inception_block.inception_layers.9.bottleneck']
+n_features: 0

@@ -1,0 +1,65 @@
+name: CENDRE${CE.clusterMode}
+
+# Clustering hyperparameters
+clusterMode:  ACsilhouette #ACsilhouette # kMeans (standard), ACnConcepts, ACthreshold, ACelbow, ACsilhouette, HDBSCAN, ACnConcepts_IS, ACthreshold_IS, ACelbow_IS, ACsilhouette_IS, HDBSCAN_IS
+n_clusters: 50 # only relevant for 2-phase clustering modes (ACnConcepts, ACthreshold, ACelbow, ACsilhouette, HDBSCAN)
+n_concepts: 0 # only relevant for clusterMode kMeans
+ac_factor: 0.1 # only relevant for ACthreshold mode
+decorrelated: True
+# ACsilhouette only: weight per-sample silhouette by kmeans micro-cluster size.
+# False (default) = sklearn's standard silhouette over centroids; matches pre-2026-04-17 behaviour.
+weighted_silhouette: False
+
+create_audio_files: False
+sampling_rate: ${oc.select:dataset.sampling_rate,1}
+# Training hyperparameters
+n_instances: 256 
+
+# Settings for different types of explanation
+scoreMode: 'classwise' #'full', 'classwise'
+maskMode: 'gradient' # 'gradient', 'binary' set to normal to avoid extra computation of thresholds
+domain: ['input', 'fourier', 'stft', 'wavelet'] # 'input', 'fourier', 'stft', 'wavelet'
+multilabel_out: 0
+visualization_mode: 'perceptual'
+mask_activation: 'relu' # 'relu' (default) or 'abs'
+
+# 'stft' domain: torch.stft/istft virtual layer (STFTLayer/ISTFTLayer)
+stft:
+  n_fft: 64
+  hop_length: 16 # >=50% overlap (hop_length <= win_length/2) needed for NOLA/exact reconstruction
+  win_length: 64
+
+# 'wavelet' domain: ptwt.MatrixWavedec/MatrixWaverec virtual layer (DWTLayer/IDWTLayer)
+wavelet:
+  name: 'db4'
+  level: 3
+
+base_path_ce: ./data/ConceptExtraction/${CE.name}
+save_dir: ${CE.base_path_ce}/${name}/out${CE.multilabel_out} #future /${layers.name}_nc${CE.n_concepts}
+device: 'cuda'
+
+object:
+  _target_: cel.CE.CENDRE.CENDRE
+  dimension: ${model.dimensionality}
+  layer_names: ${layers.layerDict_cn}
+  n_concepts: ${CE.n_concepts}
+  task: ${dataset.task}
+  n_classes: ${dataset.n_classes}
+  n_clusters: ${CE.n_clusters}
+  mask_activation: ${CE.mask_activation}
+  weighted_silhouette: ${CE.weighted_silhouette}
+  stft_n_fft: ${CE.stft.n_fft}
+  stft_hop_length: ${CE.stft.hop_length}
+  stft_win_length: ${CE.stft.win_length}
+  wavelet_name: ${CE.wavelet.name}
+  wavelet_level: ${CE.wavelet.level}
+
+loader:
+  _target_: modules.loader.create_dataloaders
+  train_size: 0.7
+  test_size: 0.0
+  batch_size: 8
+  balanced: True
+  multiplier: 1
+  seed: ${training.seed}
+  num_workers: 4

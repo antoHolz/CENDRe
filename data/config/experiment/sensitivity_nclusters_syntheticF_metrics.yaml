@@ -1,0 +1,30 @@
+# @package _global_
+# Metrics (sRC/sIC) for the n_clusters sensitivity sweep, syntheticF family.
+# Sweeper params and the save_dir overrides must mirror sensitivity_nclusters_syntheticF.yaml
+# exactly, so task30 finds the CE artifacts task20 wrote. See that file for why both save_dir
+# (run_decorator's own completion bookkeeping) and CE.save_dir need the nc<value> segment, and
+# why mode is left at its default (base) rather than pinned to force-metric.
+defaults:
+  - override /transforms: tsHFbasic
+  - override /loader: M
+  - override /training: adamw_patient
+
+save_dir: ${CE.base_path_ce}/${name}/out${CE.multilabel_out}/nc${CE.n_clusters}_cnr_${CE.n_concepts}/metrics
+CE:
+  save_dir: ${CE.base_path_ce}/${name}/out${CE.multilabel_out}/nc${CE.n_clusters}
+eval_metrics: ['dst_eclad','rma']
+alignment_metrics: [RC, IC, sIC, sICperprim, sRC, sRCmax, oRC, NMI]
+
+hydra:
+  mode: MULTIRUN
+  sweeper:
+    params:
+      dataset: midFreq-highFreq_ch1_specificChannels,midFreq-highFreq_ch1_specificChannels_conf-midhighFreq-50-50
+      model: InceptionTime10 #,ResNet1D18,DenseNet1D121
+      seed: 0,1,2 #,3,4,5,6,7,8,9
+      CE: CENDRE
+      CE.clusterMode: ACsilhouette,HDBSCAN
+      CE.n_clusters: 11,21,50,73,137,257,483,907,1704,3200
+      CE.domain: ['fourier', 'input']
+      CE.n_instances: 256
+      CE.maskMode: gradient

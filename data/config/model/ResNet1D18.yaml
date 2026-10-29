@@ -1,0 +1,13 @@
+dimensionality: 1D
+name: ResNet1D18
+object:
+  _target_: modules.models.ResNet.ResNet
+  c_in: ${dataset.n_channels}
+  c_out: ${dataset.n_classes}
+  expansion: 1
+  layers:
+  - 2
+  - 2
+  - 2
+  - 2
+  ndim: 1

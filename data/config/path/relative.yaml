@@ -1,0 +1,7 @@
+# path configuration
+name: relative 
+base_path_datasets: ./data/datasets
+base_path_models: ./data/models
+base_path: ./data
+base_path_ce: ./data/ConceptExtraction/${CE.name}
+results: ${dataset.name}_${transforms.name}_${model.name}_${training.name}_${training.seed}

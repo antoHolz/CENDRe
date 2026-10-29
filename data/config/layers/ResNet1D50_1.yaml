@@ -1,0 +1,5 @@
+name: ResNet1D50_1
+layerDict_cs: ['model.layers.3.2.relu']
+layerDict_ec: ['model.layers.0.2.relu','model.layers.1.3.relu','model.layers.2.5.relu','model.layers.3.2.relu']
+layerDict_cn: ['model.layers.0.2.relu','model.layers.1.3.relu','model.layers.2.5.relu','model.layers.3.2.relu']
+layerDict_mv: ['model.layers.3.2.relu']

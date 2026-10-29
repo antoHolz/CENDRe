@@ -1,0 +1,202 @@
+#############################################################################################
+# General parameters
+#############################################################################################
+mean: null
+n_channels: 144
+n_classes: 2
+name: FaceDetection
+std: null
+task: classification
+#############################################################################################
+# Dataset configurations
+#############################################################################################
+type: timeseries
+xcols:
+- dim_0
+- dim_1
+- dim_2
+- dim_3
+- dim_4
+- dim_5
+- dim_6
+- dim_7
+- dim_8
+- dim_9
+- dim_10
+- dim_11
+- dim_12
+- dim_13
+- dim_14
+- dim_15
+- dim_16
+- dim_17
+- dim_18
+- dim_19
+- dim_20
+- dim_21
+- dim_22
+- dim_23
+- dim_24
+- dim_25
+- dim_26
+- dim_27
+- dim_28
+- dim_29
+- dim_30
+- dim_31
+- dim_32
+- dim_33
+- dim_34
+- dim_35
+- dim_36
+- dim_37
+- dim_38
+- dim_39
+- dim_40
+- dim_41
+- dim_42
+- dim_43
+- dim_44
+- dim_45
+- dim_46
+- dim_47
+- dim_48
+- dim_49
+- dim_50
+- dim_51
+- dim_52
+- dim_53
+- dim_54
+- dim_55
+- dim_56
+- dim_57
+- dim_58
+- dim_59
+- dim_60
+- dim_61
+- dim_62
+- dim_63
+- dim_64
+- dim_65
+- dim_66
+- dim_67
+- dim_68
+- dim_69
+- dim_70
+- dim_71
+- dim_72
+- dim_73
+- dim_74
+- dim_75
+- dim_76
+- dim_77
+- dim_78
+- dim_79
+- dim_80
+- dim_81
+- dim_82
+- dim_83
+- dim_84
+- dim_85
+- dim_86
+- dim_87
+- dim_88
+- dim_89
+- dim_90
+- dim_91
+- dim_92
+- dim_93
+- dim_94
+- dim_95
+- dim_96
+- dim_97
+- dim_98
+- dim_99
+- dim_100
+- dim_101
+- dim_102
+- dim_103
+- dim_104
+- dim_105
+- dim_106
+- dim_107
+- dim_108
+- dim_109
+- dim_110
+- dim_111
+- dim_112
+- dim_113
+- dim_114
+- dim_115
+- dim_116
+- dim_117
+- dim_118
+- dim_119
+- dim_120
+- dim_121
+- dim_122
+- dim_123
+- dim_124
+- dim_125
+- dim_126
+- dim_127
+- dim_128
+- dim_129
+- dim_130
+- dim_131
+- dim_132
+- dim_133
+- dim_134
+- dim_135
+- dim_136
+- dim_137
+- dim_138
+- dim_139
+- dim_140
+- dim_141
+- dim_142
+- dim_143
+ycols:
+- label
+
+test:
+  _target_: modules.dataset.HFDataset
+  dataset:
+    _target_: datasets.Dataset.load_from_disk
+    dataset_path: ${dataset.train.dataset.dataset_path}
+  xcols: ${dataset.xcols}
+  ycols: ${dataset.ycols}
+train:
+  _target_: modules.dataset.HFDataset
+  dataset:
+    _target_: datasets.Dataset.load_from_disk
+    dataset_path: ${path.base_path_datasets}/UCR_hf/${dataset.name}
+  xcols: ${dataset.xcols}
+  ycols: ${dataset.ycols}
+val:
+  _target_: modules.dataset.HFDataset
+  dataset:
+    _target_: datasets.Dataset.load_from_disk
+    dataset_path: ${dataset.train.dataset.dataset_path}
+  xcols: ${dataset.xcols}
+  ycols: ${dataset.ycols}
+#############################################################################################
+# Preprocessing parameters
+#############################################################################################
+pretransform:
+  _target_: torchvision.transforms.Compose
+  transforms:
+  - _target_: modules.transforms.HFToTensor
+    fields: ${dataset.xcols} + ${dataset.ycols}
+  - _target_: modules.transforms.HFStack
+    fields: ${dataset.xcols}
+    dim: 0
+    new_name: x
+  - _target_: modules.transforms.HFCat
+    fields: ${dataset.ycols}
+    dim: 0
+    new_name: y
+  - _target_: modules.transforms.HFSelect
+    fields:
+    - x
+    - y

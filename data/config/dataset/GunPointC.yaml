@@ -1,0 +1,28 @@
+#############################################################################################
+# General parameters
+#############################################################################################
+mean:
+- -4.1620417808492976e-11
+n_channels: 1
+n_classes: 2
+name: GunPoint
+std:
+- 0.9966610925357354
+task: classification
+#############################################################################################
+# Dataset configurations
+#############################################################################################
+type: timeseries
+test:
+  _target_: modules.dataset.npymapDataset
+  root: ${dataset.train.root}
+train:
+  _target_: modules.dataset.npymapDataset
+  root: ${path.base_path_datasets}/UCR/${dataset.name}
+val:
+  _target_: modules.dataset.npymapDataset
+  root: ${dataset.train.root}
+#############################################################################################
+# Preprocessing parameters
+#############################################################################################
+pretransform: null

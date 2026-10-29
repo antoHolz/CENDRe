@@ -1,0 +1,21 @@
+ce_base_path: ./data/ConceptExtraction
+families:
+  SyntheticL: syntheticLocal
+  SyntheticF: syntheticFrequency
+methods: [CENDREACsilhouette, CENDREHDBSCAN, CENDREkMeans, ECLADts, MultiVISION]
+eval_metric: rma
+metric_bases: [sRC, sIC]
+confidence: 0.95
+k_mode: best
+exp_name: distributional_summary
+per_model: true
+decimals: 3
+dataset_col_width_cm: 3.2
+data_col_width_cm: 2.0
+
+hydra:
+  run:
+    dir: ./data/outputs/${now:%Y-%m-%d_%H-%M-%S}_${hydra.job.name}
+  sweep:
+    dir: ./data/multirun/${now:%Y-%m-%d_%H-%M-%S}_${hydra.job.name}
+    subdir: ${hydra.job.num}

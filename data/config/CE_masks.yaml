@@ -1,0 +1,32 @@
+defaults:
+  - _self_
+  - path: applewood_remote
+  - model: InceptionTime10
+  - training: basic
+  - dataset: square-nothing_ch2_all
+  - transforms: basic
+  - loader: basic
+  - layers: ${model}_1
+  - CE: CENDRE
+
+pretrain_checkpoint: null
+suffix: "" #_${now:%Y-%m-%d_%H-%M-%S.%f}
+name: ${dataset.name}_${model.name}_${transforms.name}_${loader.name}_${training.name}__${seed}_${suffix}
+
+save_dir_model:  ${path.base_path_models}/${name} 
+save_dir_CE: ${CE.base_path_ce}/${name}/cnr_${CE.n_concepts}
+save_dir_base: ./data/ConceptMasks
+save_dir: ./data/ConceptMasks/${dataset.name}/${name}/cnr_${CE.n_concepts}/out${CE.multilabel_out}
+seed: 0 # Seed for reproducibility
+mode: base # execution mode: base, force, force-report, force-metric,  clean, check
+plot: True
+partitions: 5
+samples_per_partition: 20
+partition_range: [-2,2]
+
+hydra:
+  run:
+    dir: ./data/outputs/${now:%Y-%m-%d_%H-%M-%S}_${hydra.job.name}
+  sweep:
+    dir: ./data/multirun/${now:%Y-%m-%d_%H-%M-%S}_${hydra.job.name}
+    subdir: ${hydra.job.num}

@@ -1,0 +1,24 @@
+# @package _global_
+defaults:
+  - override /transforms: tsHFbasic
+  - override /loader: M
+  - override /training: adamw_patient
+
+eval_metrics: ['dst_eclad','rma']
+alignment_metrics: [RC, IC, sIC, sICperprim, sRC, sRCmax, oRC, NMI]
+
+hydra:
+  mode: MULTIRUN
+  sweeper:
+    params:
+      dataset: midFreq-highFreq_ch1_specificChannels,midFreq-highFreq_ch1_specificChannels_conf-midhighFreq-50-50,midFreq-midhighFreq_ch1_specificChannels,midFreq-midhighFreq_ch1_specificChannels_conf-highFreq-50-50,midhighFreq-highFreq_ch1_specificChannels,midhighFreq-highFreq_ch1_specificChannels_conf-midFreq-50-50 #,midhighFreq-highFreq_ch2_specificChannels_conf-midFreq-50-50,midFreq-midhighFreq_ch2_specificChannels_conf-highFreq-50-50,midhighFreq-highFreq_ch2_specificChannels_conf-midFreq-50-50
+      model: InceptionTime10,ResNet1D18,DenseNet1D121 #,InceptionTime20
+      seed: 0,1,2 #,3,4 #,5,6,7,8,9
+      CE: CENDRE
+      CE.clusterMode: kMeans
+      CE.n_concepts: 2,4,6,8,10
+      CE.n_clusters: 50
+      CE.n_instances: 256
+      CE.domain: ['fourier','input']
+      CE.maskMode: gradient
+      # CE.loader.batch_size: 2

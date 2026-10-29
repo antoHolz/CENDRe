@@ -1,0 +1,39 @@
+name: tsHFSynth
+standardize: ${requires_standardize:${transforms.train.transforms},${transforms.val.transforms},${transforms.test.transforms}}
+train:
+  _target_: torchvision.transforms.Compose
+  transforms:
+  # - _target_: modules.transforms.hftransforms.HFRandomCropPad
+  #   fields: ['x']
+  #   magnitude: 0.03
+  - _target_: modules.transforms.hftransforms.HFTimeWarp
+    fields: ['x']
+    sigma: 0.1
+    knot: 2
+  - _target_: modules.transforms.hftransforms.HFAddGaussianNoise
+    fields: ['x']
+    mean: 0
+    std: 0.015
+val:
+  _target_: torchvision.transforms.Compose
+  transforms:
+  - _target_: modules.transforms.hftransforms.HFTimeWarp
+    fields: ['x']
+    sigma: 0.1
+    knot: 2
+  - _target_: modules.transforms.hftransforms.HFAddGaussianNoise
+    fields: ['x']
+    mean: 0
+    std: 0.015
+
+test:
+  _target_: torchvision.transforms.Compose
+  transforms:
+  - _target_: modules.transforms.hftransforms.HFTimeWarp
+    fields: ['x']
+    sigma: 0.1
+    knot: 2
+  - _target_: modules.transforms.hftransforms.HFAddGaussianNoise
+    fields: ['x']
+    mean: 0
+    std: 0.015

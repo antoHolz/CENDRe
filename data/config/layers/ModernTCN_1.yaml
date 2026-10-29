@@ -1,0 +1,3 @@
+name: ModernTCN
+layerDict_ec: ['model.stages.2.blocks.0.ffn1pw1', 'model.stages.3.blocks.0.dw.small_conv.conv', 'model.stages.3.blocks.0.ffn2pw2']
+layerDict_cn: ['model.stages.2.blocks.0.ffn1pw1', 'model.stages.3.blocks.0.dw.small_conv.conv', 'model.stages.3.blocks.0.ffn2pw2']

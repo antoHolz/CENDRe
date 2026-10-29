@@ -1,0 +1,90 @@
+#########################################################
+# Training Configuration
+#########################################################
+
+name: adamw
+seed: 0
+device: cuda
+task: ${dataset.task}
+monitor_model_steps: 10 # number of optim steps
+compile: False
+verbose: False
+
+# basic configuration
+loss:
+  _target_: torch.nn.MSELoss
+optimizer:
+  _target_: torch.optim.AdamW
+  lr: 1e-4
+  weight_decay : 1e-3
+
+scheduler:
+  _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
+  mode: min
+  factor: 0.1
+  patience: 20
+
+# Trainer configuration
+trainer:
+  _target_: lightning.pytorch.Trainer
+  max_epochs: 100
+  min_epochs: 10
+  devices: -1
+  accelerator: auto
+  gradient_clip_val: 10.0
+  deterministic: true
+  enable_progress_bar: true
+  enable_model_summary: true
+  strategy: auto
+  precision: 32
+  #log_every_n_steps: 100
+  #accumulate_grad_batches: 5
+
+# Callbacks configuration
+callbacks:
+  model_checkpoint:
+    _target_: lightning.pytorch.callbacks.ModelCheckpoint
+    dirpath: ${save_dir}
+    filename: 'best'
+    save_weights_only: false
+    save_top_k: 1
+    monitor: 'val_loss'
+    mode: 'min'
+    save_last : true
+
+  learning_rate_monitor:
+    _target_: lightning.pytorch.callbacks.LearningRateMonitor
+    logging_interval: 'epoch'
+
+  early_stopping:
+    _target_: lightning.pytorch.callbacks.EarlyStopping
+    monitor: 'val_loss'
+    patience: 10
+    mode: 'min'
+
+  
+# Metrics to log
+metrics:
+
+  mse:
+    _target_: torchmetrics.MeanSquaredError
+  mae:
+    _target_: torchmetrics.MeanAbsoluteError
+  mape:
+    _target_: torchmetrics.MeanAbsolutePercentageError
+  rmse:
+    _target_: torchmetrics.MeanSquaredError
+    squared: false
+  rse:
+    _target_: torchmetrics.RelativeSquaredError
+
+# Loggers configuration
+loggers:
+  tensorboard:
+    _target_: lightning.pytorch.loggers.tensorboard.TensorBoardLogger
+    save_dir: ${save_dir}
+    name: tb
+  csv:
+    _target_: lightning.pytorch.loggers.csv_logs.CSVLogger
+    save_dir: ${save_dir}
+    name: csv

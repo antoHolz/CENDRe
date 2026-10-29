@@ -1,0 +1,6 @@
+name: InceptionTime20_1
+layerDict_ec: ['model.inception_block.inception_layers.16.bottleneck','model.inception_block.inception_layers.17.bottleneck',  'model.inception_block.inception_layers.8.bottleneck', 'model.inception_block.inception_layers.19.bottleneck']
+layerDict_cn: ['model.inception_block.inception_layers.16.bottleneck','model.inception_block.inception_layers.17.bottleneck',  'model.inception_block.inception_layers.8.bottleneck', 'model.inception_block.inception_layers.19.bottleneck']
+layerDict_cs: ['model.inception_block.inception_layers.9.bottleneck']
+layerDict_mv: ['model.inception_block.inception_layers.9.bottleneck']
+n_features: 0

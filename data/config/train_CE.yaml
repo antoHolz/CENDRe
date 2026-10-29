@@ -1,0 +1,42 @@
+defaults:
+  - _self_
+  - path: applewood_remote
+  - model: InceptionTime10
+  - training: basic
+  - dataset: square-nothing_ch2_all
+  - transforms: tsbasic
+  - loader: basic
+  - layers: ${model}_1
+  - CE: CENDRE
+
+pretrain_checkpoint: null
+suffix: "" #_${now:%Y-%m-%d_%H-%M-%S.%f}
+name: ${dataset.name}_${model.name}_${transforms.name}_${loader.name}_${training.name}__${seed}_${suffix}
+
+save_dir_model:  ${path.base_path_models}/${name} 
+save_dir: ${CE.base_path_ce}/${name}/out${CE.multilabel_out}/cnr_${CE.n_concepts} # Currently only used in qol. Save uses the one in the respective CE yaml.
+seed: 0 # Seed for reproducibility
+mode: base # execution mode: base, force, force-report, force-metric,  clean, check
+
+# Report settings, mirroring examples/task20_concept_extraction_ts.ipynb.
+report:
+  usetex: auto # auto (use LaTeX only if a latex binary is on PATH), true, false
+  font_size: 20
+  font_base: 5
+  n_repeats: 3 # samples per (y, y_hat) combination picked by sorted_inputs
+  only_correct: True # keep only correctly classified samples (the y == y_hat diagonal)
+  noisetunnel: True # average masks over noisy copies of the inputs
+  use_clamp: False # False: normalise masks per concept; True: dataset-level clamp
+  classwise_IS: True
+  importance_thr: null # null keeps the per-CE default (0.50 CENDRE, 0.70 others)
+  c_indexes: null # null plots all concepts
+  concept_correspondence:
+    num_batches: 10
+    horizontal: False # concepts as rows, channels as columns
+
+hydra:
+  run:
+    dir: ./data/outputs/${now:%Y-%m-%d_%H-%M-%S}_${hydra.job.name}
+  sweep:
+    dir: ./data/multirun/${now:%Y-%m-%d_%H-%M-%S}_${hydra.job.name}
+    subdir: ${hydra.job.num}

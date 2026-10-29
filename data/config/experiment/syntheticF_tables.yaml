@@ -1,0 +1,30 @@
+# @package _global_
+defaults:
+  - override /transforms: tsHFbasic
+  - override /loader: M
+  - override /training: adamw_patient
+  - override /path: applewood_local
+  - override /dataset: midFreq-highFreq_ch1_specificChannels
+
+datasets:
+  - midFreq-highFreq_ch1_specificChannels
+  - midFreq-highFreq_ch1_specificChannels_conf-midhighFreq-50-50
+  - midFreq-midhighFreq_ch1_specificChannels
+  - midFreq-midhighFreq_ch1_specificChannels_conf-highFreq-50-50
+  - midhighFreq-highFreq_ch1_specificChannels
+  - midhighFreq-highFreq_ch1_specificChannels_conf-midFreq-50-50
+  # - midFreq-highFreq_ch2_specificChannels_conf-midhighFreq-50-50
+  # - midFreq-midhighFreq_ch2_specificChannels_conf-highFreq-50-50
+  # - midhighFreq-highFreq_ch2_specificChannels_conf-midFreq-50-50
+
+seeds: [0,1,2]
+models:
+  - InceptionTime10
+  - ResNet1D18
+  - DenseNet1D121
+methods:
+  - CENDREACsilhouette
+  - CENDREHDBSCAN
+n_concepts: [2,4,8,10]
+exp_name: syntheticFrequency
+eval_metrics: [dst_eclad, rma]

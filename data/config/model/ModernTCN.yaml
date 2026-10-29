@@ -1,0 +1,8 @@
+dimensionality: 1D
+name: ModernTCN
+object:
+  _target_: modules.models.ModernTCN.ModernTCN
+  c_in: ${dataset.n_channels}
+  c_out: ${dataset.n_classes}
+  seq_len: 1000
+  task_name: classification

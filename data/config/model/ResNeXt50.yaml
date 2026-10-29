@@ -1,0 +1,15 @@
+dimensionality: 1D
+name: ResNeXt50
+object:
+  _target_: modules.models.ResNeXt.ResNeXt
+  base_width: 4
+  c_in: ${dataset.n_channels}
+  c_out: ${dataset.n_classes}
+  cardinality: 32
+  expansion: 4
+  layers:
+  - 3
+  - 4
+  - 6
+  - 3
+  ndim: 2

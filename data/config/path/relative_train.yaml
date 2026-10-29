@@ -1,0 +1,5 @@
+# path configuration
+name: relative_train
+base_path_datasets: .data/datasets #data/datasets/generated_A-nothing #data/datasets/generated_A-nothing #.data/datasets #data/datasets/generated_A-nothing 
+base_path_models: ./data/models
+base_path: ./data

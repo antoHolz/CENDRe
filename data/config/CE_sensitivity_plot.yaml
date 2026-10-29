@@ -1,0 +1,46 @@
+defaults:
+  - _self_
+  - transforms: tsHFbasic
+  - loader: M
+  - training: adamw_patient
+
+outnr: 0
+seeds: [0]
+models: [InceptionTime10]
+methods: [ACsilhouette, HDBSCAN] # CE.clusterMode values; folder name is CENDRE<method>
+datasets: [square-nothing_ch2_all]
+dataset_family: {} # dataset name -> family label, e.g. {circle-nothing_...: syntheticL}
+n_clusters: [50]
+n_clusters_ref: 50 # paper's chosen value; reference line and equivalence anchor
+eval_metrics: ['rma']
+primary_eval_metric: rma # which eval_metric the sRC/sIC sensitivity plots use
+# Response variables analysed; K is the concept count from the importances file
+report_metrics: [sRC_rma, sIC_rma, K]
+grid_weighting: log_voronoi # level weights of the log-uniform measure over n_clusters; or uniform
+equivalence_margin: 0.02 # delta_fixed for the TOST, in metric units
+equivalence_alpha: 0.05
+confidence: 0.95 # level of the S1 bootstrap interval and of the t band
+response_band: sd # band drawn on the response curves: sd or t (confidence)
+share_y: row # response-curve y-limits: row shares within a metric, all across the whole figure
+min_blocks_per_point: 3 # curve points backed by fewer surviving seeds are not drawn
+bootstrap_n: 2000 # seed resamples behind the S1 confidence interval
+bootstrap_seed: 0
+table_columns: [S1_J, S1_seed, mu] # COLUMN_SPECS keys
+dataset_label_breaks: ['_ch1', '_conf'] # table row labels wrap before each of these segments
+table_col_width_cm: 4.4 # row-label column; the data columns all share one fixed width
+table_data_col_width_cm: 1.55
+table_caption: 'Sensitivity of {metric} to the number of micro-clusters $J$.' # {metric} -> sRC, sIC
+method_labels: # CE.clusterMode -> table overtitle
+  ACsilhouette: 'CENDRe$_{\mathrm{silhouette}}$'
+  HDBSCAN: 'CENDRe$_{\mathrm{HDBSCAN}}$'
+save_pdf: false
+exp_name: sensitivity_nclusters
+ce_base_path: ./data/ConceptExtraction
+k_target: 10 # concept count a run must reach to count in task36_concept_count.py
+
+hydra:
+  run:
+    dir: ./data/outputs/${now:%Y-%m-%d_%H-%M-%S}_${hydra.job.name}
+  sweep:
+    dir: ./data/multirun/${now:%Y-%m-%d_%H-%M-%S}_${hydra.job.name}
+    subdir: ${hydra.job.num}

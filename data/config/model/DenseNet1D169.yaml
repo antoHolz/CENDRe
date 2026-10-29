@@ -1,0 +1,15 @@
+dimensionality: 1D
+name: DenseNet1D169
+object:
+  _target_: modules.models.DenseNet.DenseNet
+  block_config:
+  - 6
+  - 12
+  - 32
+  - 32
+  c_in: ${dataset.n_channels}
+  c_out: ${dataset.n_classes}
+  compression: 0.5
+  growth_rate: 32
+  ndim: 1
+  num_init_features: 64

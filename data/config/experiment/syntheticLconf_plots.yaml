@@ -1,0 +1,33 @@
+# @package _global_
+defaults:
+  - override /transforms: tsHFbasic
+  - override /loader: M
+  - override /training: adamw_patient
+
+hydra: 
+  mode: MULTIRUN
+  sweeper:
+    params:
+      datasets: 
+        - square-circle_ch1_specificChannels_conf-triangle-40-60
+        - square-circle_ch1_specificChannels_conf-triangle-50-50
+        - square-circle_ch1_specificChannels_conf-triangle-60-40
+        - triangle-circle_ch1_specificChannels_conf-square-40-60
+        - triangle-circle_ch1_specificChannels_conf-square-50-50
+        - triangle-circle_ch1_specificChannels_conf-square-60-40
+      seeds: [0,1,2]
+      models:
+        - InceptionTime10
+        - ResNet1D18
+        - DenseNet1D121
+      methods:
+        - ECLADts
+        - MultiVISION
+        - CENDREACsilhouette
+        - CENDREHDBSCAN
+        - CENDREkMeans
+      n_concepts: [2,4,6,8,10]
+      exp_name: syntheticLconf
+      eval_metrics: [dst_eclad, rma] # [dst_eclad,soft_dice, rma, soft_recall] soft dice and recall measure different things (and higher not necessarily better) thus removing from current setting.
+      save_pdf: False
+      k_mode: best

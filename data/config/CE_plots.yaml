@@ -1,0 +1,43 @@
+defaults:
+  - _self_
+  - path: applewood_remote
+  - model: InceptionTime10
+  - training: basic
+  - dataset: square-nothing_ch2_all
+  - transforms: basic
+  - loader: basic
+  - layers: ${model}_1
+  - CE: ECLAD
+
+pretrain_checkpoint: null
+suffix: "" #_${now:%Y-%m-%d_%H-%M-%S.%f}
+name: ${dataset.name}_${model.name}_${transforms.name}_${loader.name}_${training.name}__${seed}_${suffix}
+
+outnr: 0
+save_dir_model:  ${path.base_path_models}/${name} 
+save_dir: ${CE.base_path_ce}/${name}/out${outnr}/cnr_${CE.n_concepts}/metrics
+seeds: [0] # Seed for reproducibility
+mode: base # execution mode: base, force, force-report, force-metric,  clean, check
+eval_metrics: ['dst_eclad'] # Options: dst_eclad, soft_iou, soft_dice, cdc, epg, soft_precision, soft_recall, rma
+k_mode: all        # Options: all (keep all k values), mean (average over k per seed), best (max over k per seed)
+save_pdf: true     # Whether to produce PDF alongside PNG
+models:
+  - InceptionTime10
+  - ResNet1D18
+#  - DenseNet1D121
+  - InceptionTime20
+methods:
+  - ECLADts
+  - CENDRE
+  - MultiVISION
+datasets: 
+  - square-nothing_ch2_all
+n_concepts: [2,4,6,8,10]
+exp_name: basic
+
+hydra:
+  run:
+    dir: ./data/outputs/${now:%Y-%m-%d_%H-%M-%S}_${hydra.job.name}
+  sweep:
+    dir: ./data/multirun/${now:%Y-%m-%d_%H-%M-%S}_${hydra.job.name}
+    subdir: ${hydra.job.num}

@@ -1,0 +1,43 @@
+name: tsHFWarp
+standardize: ${requires_standardize:${transforms.train.transforms},${transforms.val.transforms},${transforms.test.transforms}}
+train:
+  _target_: torchvision.transforms.Compose
+  transforms:
+  - _target_: modules.transforms.hftransforms.HFStandardize2
+    fields_x: ${dataset.xcols}
+    fields_y: ${dataset.ycols}
+    mean: ${dataset.mean}
+    std: ${dataset.std}
+  - _target_: modules.transforms.hftransforms.HFTimeWarp
+    fields:
+    - x
+    knot: 4
+    sigma: 0.01
+  
+val:
+  _target_: torchvision.transforms.Compose
+  transforms:
+  - _target_: modules.transforms.hftransforms.HFStandardize2
+    fields_x: ${dataset.xcols}
+    fields_y: ${dataset.ycols}
+    mean: ${dataset.mean}
+    std: ${dataset.std}
+  - _target_: modules.transforms.hftransforms.HFTimeWarp
+    fields:
+    - x
+    knot: 4
+    sigma: 0.01
+
+test:
+  _target_: torchvision.transforms.Compose
+  transforms:
+  - _target_: modules.transforms.hftransforms.HFStandardize2
+    fields_x: ${dataset.xcols}
+    fields_y: ${dataset.ycols}
+    mean: ${dataset.mean}
+    std: ${dataset.std}
+  - _target_: modules.transforms.hftransforms.HFTimeWarp
+    fields:
+    - x
+    knot: 4
+    sigma: 0.01

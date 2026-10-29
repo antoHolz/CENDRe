@@ -1,0 +1,23 @@
+name: timer25
+type: timeseries
+object:
+  _target_: modules.models.timer.Timer
+  # General Configuration
+  task: ${dataset.task} #"long_term_forecast"       # Name of the task (e.g., 'long_term_forecast', 'short_term_forecast', 'imputation', 'anomaly_detection', 'classification')
+  seq_len: ${dataset.seq_len}      # Length of the sequence
+  #pred_len: ${data.pred_len}    # Length of the prediction sequence
+  patch_len: ${dataset.pred_len}    # Length of each patch
+  # Embedding Layer
+  d_model: 1024                    # Dimension of the model
+  dropout: 0.1                     # Dropout rate
+  # Encoder Layer
+  n_heads: 8                       # Number of attention heads
+  d_ff: 1024                        # Dimension of feed-forward network
+  activation: "gelu"               # Activation function (e.g., 'gelu', 'relu')
+  e_layers: 4                      # Number of encoder layers
+  # Additional Parameters
+  factor: 3                        # Attention factor
+  output_attention: False          # Whether to output attention weights
+  c_in: 1
+  c_out: ${default:${dataset.c_out},1}
+  last_patch: False 

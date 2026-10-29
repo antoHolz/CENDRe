@@ -1,0 +1,37 @@
+defaults:
+  - _self_
+  - path: applewood_remote
+  - model: InceptionTime10
+  - training: basic
+  - dataset: square-nothing_ch2_all
+  - transforms: basic
+  - loader: basic
+  - layers: ${model}_1
+  - CE: ECLAD
+
+pretrain_checkpoint: null
+suffix: "" #_${now:%Y-%m-%d_%H-%M-%S.%f}
+name: ${dataset.name}_${model.name}_${transforms.name}_${loader.name}_${training.name}__${seed}_${suffix}
+
+outnr: 0
+save_dir_model: ${path.base_path_models}/${name}
+save_dir: ${CE.base_path_ce}/${name}/out${outnr}/cnr_${CE.n_concepts}/metrics
+seeds: [0]
+mode: base
+eval_metrics: ['dst_eclad']
+models:
+  - InceptionTime10
+methods:
+  - ECLADts
+datasets:
+  - square-nothing_ch2_all
+n_concepts: [2,4,6,8,10]
+n_clusters: 50
+exp_name: basic
+
+hydra:
+  run:
+    dir: ./data/outputs/${now:%Y-%m-%d_%H-%M-%S}_${hydra.job.name}
+  sweep:
+    dir: ./data/multirun/${now:%Y-%m-%d_%H-%M-%S}_${hydra.job.name}
+    subdir: ${hydra.job.num}

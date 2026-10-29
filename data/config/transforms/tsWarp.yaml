@@ -1,0 +1,31 @@
+name: tsWarp
+standardize: ${requires_standardize:${transforms.train.transforms},${transforms.val.transforms},${transforms.test.transforms}}
+train:
+  _target_: torchvision.transforms.Compose
+  transforms:
+  - _target_: modules.transforms.tstransforms.TSToTensor
+  - _target_: modules.transforms.tstransforms.TSStandardize
+    mean: ${dataset.mean}
+    std: ${dataset.std}
+  - _target_: modules.transforms.tstransforms.TSTimeWarp2
+    knot: 4
+    sigma: 0.05
+  
+val:
+  _target_: torchvision.transforms.Compose
+  transforms:
+  - _target_: modules.transforms.tstransforms.TSToTensor
+  - _target_: modules.transforms.tstransforms.TSStandardize
+    mean: ${dataset.mean}
+    std: ${dataset.std}
+  - _target_: modules.transforms.tstransforms.TSTimeWarp2
+    knot: 4
+    sigma: 0.05
+
+test:
+  _target_: torchvision.transforms.Compose
+  transforms:
+  - _target_: modules.transforms.tstransforms.TSToTensor
+  - _target_: modules.transforms.tstransforms.TSStandardize
+    mean: ${dataset.mean}
+    std: ${dataset.std}

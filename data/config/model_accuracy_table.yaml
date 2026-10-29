@@ -1,0 +1,34 @@
+defaults:
+  - _self_
+  - path: applewood_local
+  - transforms: tscHFNoiseWarp
+  - loader: xs
+  - training: adamw_patient
+
+suffix: ""
+seeds: [0]
+checkpoint: best      # Options: best, last, zero (keys of training_results.json)
+metric: test_acc      # Options: test_acc, test_f1, test_loss
+decimals: 3
+exp_name: UCR
+out_dir: ./data/ConceptExtraction/comparison
+models:
+  - InceptionTime10
+  - ResNet1D18
+  - DenseNet1D121
+datasets:
+  - FordA
+  - FordB
+  - Car
+  - Earthquakes
+  - Haptics
+  - Wafer
+  - SonyAIBORobotSurface1
+  - SonyAIBORobotSurface2
+
+hydra:
+  run:
+    dir: ./data/outputs/${now:%Y-%m-%d_%H-%M-%S}_${hydra.job.name}
+  sweep:
+    dir: ./data/multirun/${now:%Y-%m-%d_%H-%M-%S}_${hydra.job.name}
+    subdir: ${hydra.job.num}

@@ -1,0 +1,27 @@
+name: 'ECLADts'
+n_concepts: 10
+decorrelated: True
+multilabel_out: 0
+n_instances: 2560 # n_batches: round(2560/${CE.loader.batch_size})
+base_path_ce: ./data/ConceptExtraction/${CE.name}
+save_dir: ${CE.base_path_ce}/${name}/out${CE.multilabel_out} #/out${CE.multilabel_out} #future /${layers.name}_nc${CE.n_concepts}
+device: 'cuda'
+domain: ['input'] # only 'input'
+
+object: 
+  _target_: cel.CE.ECLADts.ECLADts
+  dimension: ${model.dimensionality}
+  layer_names: ${layers.layerDict_ec}
+  n_concepts: ${CE.n_concepts}
+  task: ${dataset.task}
+  multilabel_out: ${CE.multilabel_out}
+
+loader:
+  _target_: modules.loader.create_dataloaders
+  train_size: 0.7
+  test_size: 0.0
+  batch_size: 20
+  balanced: True
+  multiplier: 1
+  seed: ${training.seed}
+  num_workers: 4

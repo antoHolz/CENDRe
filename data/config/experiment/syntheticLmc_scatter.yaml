@@ -1,0 +1,32 @@
+# @package _global_
+defaults:
+  - override /transforms: tsHFbasic
+  - override /loader: M
+  - override /training: adamw_patient
+  - override /path: applewood_local
+  - override /dataset: circle-nothing_ch2_random
+
+datasets:
+  - circle-nothing_ch2_random
+  - square-nothing_ch2_random
+  - triangle-nothing_ch2_random
+  - triangle-circle_ch2_specificChannels
+  - square-triangle_ch2_specificChannels
+  - square-circle_ch2_specificChannels
+
+seeds: [0,1,2]
+models:
+  - InceptionTime10
+  - ResNet1D18
+  - DenseNet1D121
+methods:
+  - ECLADts
+  - MultiVISION
+  - CENDREACsilhouette
+  - CENDREHDBSCAN
+  - CENDREkMeans
+n_concepts: [2,4,6,8,10]
+exp_name: syntheticLmc
+scatter_mode: all
+scatter_metric: [dst_eclad, rma]
+save_pdf: false

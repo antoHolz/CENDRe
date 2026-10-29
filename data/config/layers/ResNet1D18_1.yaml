@@ -1,0 +1,5 @@
+name: ResNet1D18_1
+layerDict_cs: ['model.layers.2.1.relu']
+layerDict_ec: ['model.layers.0.1.relu','model.layers.1.1.relu','model.layers.2.1.relu','model.layers.3.1.relu']
+layerDict_cn: ['model.layers.0.1.relu','model.layers.1.1.relu','model.layers.2.1.relu','model.layers.3.1.relu']
+layerDict_mv: ['model.layers.2.1.relu']

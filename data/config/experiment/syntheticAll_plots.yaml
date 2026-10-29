@@ -1,0 +1,60 @@
+# @package _global_
+# Union of all synthetic experiments (frequency + local + conf + multichannel).
+# Instances where a method/dataset combo was not run are silently skipped.
+defaults:
+  - override /transforms: tsHFbasic
+  - override /loader: M
+  - override /training: adamw_patient
+
+hydra:
+  mode: MULTIRUN
+  sweeper:
+    params:
+      datasets:
+        # --- syntheticF (frequency) ---
+        - midFreq-highFreq_ch1_specificChannels
+        - midFreq-highFreq_ch1_specificChannels_conf-midhighFreq-50-50
+        - midFreq-midhighFreq_ch1_specificChannels
+        - midFreq-midhighFreq_ch1_specificChannels_conf-highFreq-50-50
+        - midhighFreq-highFreq_ch1_specificChannels
+        - midhighFreq-highFreq_ch1_specificChannels_conf-midFreq-50-50
+        # --- syntheticL (local, ch1) ---
+        - circle-nothing_ch1_specificChannels
+        - square-circle_ch1_specificChannels
+        - triangle-circle_ch1_specificChannels
+        - square-nothing_ch1_specificChannels
+        - square-triangle_ch1_specificChannels
+        - triangle-nothing_ch1_specificChannels
+        - squareorcircle-nothing_ch1_specificChannels
+        - triangleorcircle-nothing_ch1_specificChannels
+        - squareortriangle-nothing_ch1_specificChannels
+        # --- syntheticLconf (confounded, ch1) ---
+        - square-circle_ch1_specificChannels_conf-triangle-40-60
+        - square-circle_ch1_specificChannels_conf-triangle-50-50
+        - square-circle_ch1_specificChannels_conf-triangle-60-40
+        - triangle-circle_ch1_specificChannels_conf-square-40-60
+        - triangle-circle_ch1_specificChannels_conf-square-50-50
+        - triangle-circle_ch1_specificChannels_conf-square-60-40
+        # --- syntheticLmc (multichannel, ch2) ---
+        - circle-nothing_ch2_random
+        - square-nothing_ch2_random
+        - triangle-nothing_ch2_random
+        - triangle-circle_ch2_specificChannels
+        - square-triangle_ch2_specificChannels
+        - square-circle_ch2_specificChannels
+      seeds: [0,1,2]
+      models:
+        - InceptionTime10
+        - ResNet1D18
+        - DenseNet1D121
+      methods:
+        - ECLADts
+        - MultiVISION
+        - CENDREACsilhouette
+        - CENDREHDBSCAN
+        - CENDREkMeans
+      n_concepts: [2,4,6,8,10]
+      exp_name: syntheticAll
+      eval_metrics: [dst_eclad, rma]
+      save_pdf: False
+      k_mode: best

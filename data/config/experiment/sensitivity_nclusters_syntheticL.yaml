@@ -1,0 +1,34 @@
+# @package _global_
+# n_clusters sensitivity sweep (CENDRe-ACsilhouette / CENDRe-HDBSCAN), syntheticL family.
+# See .claude/plans/260724_sensitivity_analysis.md for the design.
+# Both save_dir and CE.save_dir get an nc<value> segment so runs at different n_clusters don't
+# collide and mode=base resumability works per n_clusters (see the "known gotcha" section of
+# the plan). save_dir is run_decorator's own completion bookkeeping (cnr_${CE.n_concepts}
+# alone, unpatched, is identical across all n_clusters values and would make mode=base skip the
+# whole sweep after the first value). CE.save_dir is where CE.fit()/save() actually write.
+# Do NOT use top-level `suffix` for this: it also feeds save_dir_model (the trained classifier
+# checkpoint path), which has no such suffix -- confirmed by a smoke test that broke checkpoint
+# loading. Leave mode at its default (base): force* modes skip resumability, which matters for
+# an ~11 hour sweep that may need to resume.
+defaults:
+  - override /transforms: tsHFbasic
+  - override /loader: M
+  - override /training: adamw_patient
+
+save_dir: ${CE.base_path_ce}/${name}/out${CE.multilabel_out}/nc${CE.n_clusters}_cnr_${CE.n_concepts}
+CE:
+  save_dir: ${CE.base_path_ce}/${name}/out${CE.multilabel_out}/nc${CE.n_clusters}
+
+hydra:
+  mode: MULTIRUN
+  sweeper:
+    params:
+      dataset: circle-nothing_ch1_specificChannels,squareorcircle-nothing_ch1_specificChannels
+      model: InceptionTime10 #,ResNet1D18,DenseNet1D121
+      seed: 0,1,2 #,3,4,5,6,7,8,9
+      CE: CENDRE
+      CE.clusterMode: ACsilhouette,HDBSCAN
+      CE.domain: ['input', 'fourier']
+      CE.n_clusters: 11,21,50,73,137,257,483,907,1704,3200
+      CE.n_instances: 256
+      CE.maskMode: gradient

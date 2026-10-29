@@ -1,0 +1,82 @@
+name: 'ConceptShap'
+n_concepts: 10
+multilabel_out: 0
+layerconf_nr: 2
+lambda1: 0.0001
+lambda2: 0.1
+beta: 0.2
+vis_mode: ERF
+base_path_ce: ./data/ConceptExtraction/${CE.name}
+save_dir: ${CE.base_path_ce}/${name}/out${CE.multilabel_out} #future /${layers.name}_nc${CE.n_concepts}
+device: 'cuda'
+n_instances: 2560 # n_batches: round(2560/${CE.loader.batch_size})
+decorrelated: False
+domain: ['input'] # only 'input'
+
+object: 
+  _target_: cel.CE.ConceptShap.ConceptShap
+  dimension: ${model.dimensionality}
+  n_concepts: ${CE.n_concepts}
+  n_classes: ${dataset.n_classes}
+  task: ${dataset.task}
+  layer_name: ${layers.layerDict_cs}
+  n_features: 0
+  lambda1: ${CE.lambda1}
+  lambda2: ${CE.lambda2}
+  beta: ${CE.beta}
+  vis_mode: ${CE.vis_mode}
+
+
+#loader: ${loader.object}
+loader:
+  _target_: modules.loader.create_dataloaders
+  train_size: 0.7
+  test_size: 0.0
+  batch_size: 64
+  balanced: True
+  multiplier: 1
+  seed: ${training.seed}
+  num_workers: 4
+
+cfg_training: 
+  _target_:
+  # Training configuration for the model model
+  device: ${CE.device}  # Default: 'cuda'
+  seed: 1               # Seed for random number generation (int)
+  save_model: true     # Whether to save the model to disk (bool)
+  loss: 
+    _target_: torch.nn.NLLLoss
+  optimizer:
+    _target_: torch.optim.AdamW
+    lr: 1e-4
+    weight_decay : 0.01
+  scheduler:
+    _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
+    mode: 'min'
+    factor: 0.1
+    patience: 10
+  scheduler_monitor: train_loss_epoch
+  min_epochs: 1
+  max_epochs_train: 50
+  max_epochs_finetune: 5
+  max_instances_epoch: 100
+  MCSh_epochs: 20
+  early_stopping_config:
+    monitor: train_acc_epoch
+    min_delta: 0.001
+    patience: 25
+    verbose: False
+    mode: max
+  gradient_clip_val: 1
+  metrics: ['acc', 'f1']
+  gradient_accumulation_steps: 2
+  loggers:
+    tensorboard:
+      _target_: lightning.pytorch.loggers.tensorboard.TensorBoardLogger
+      save_dir: ${CE.base_path_ce}/${name}/c_${CE.n_concepts}
+      name: tb
+    csv:
+      _target_: lightning.pytorch.loggers.csv_logs.CSVLogger
+      save_dir: ${CE.base_path_ce}/${name}/c_${CE.n_concepts}
+      name: csv
+  num_classes: ${dataset.n_classes} 

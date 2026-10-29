@@ -1,0 +1,40 @@
+name: tsHFNoise003
+standardize: ${requires_standardize:${transforms.train.transforms},${transforms.val.transforms},${transforms.test.transforms}}
+train:
+  _target_: torchvision.transforms.Compose
+  transforms:
+  - _target_: modules.transforms.hftransforms.HFStandardize2
+    fields_x: ${dataset.xcols}
+    fields_y: ${dataset.ycols}
+    mean: ${dataset.mean}
+    std: ${dataset.std}
+  - _target_: modules.transforms.hftransforms.HFAddGaussianNoise
+    fields: ['x']
+    mean: 0
+    std: 0.003
+  
+val:
+  _target_: torchvision.transforms.Compose
+  transforms:
+  - _target_: modules.transforms.hftransforms.HFStandardize2
+    fields_x: ${dataset.xcols}
+    fields_y: ${dataset.ycols}
+    mean: ${dataset.mean}
+    std: ${dataset.std}
+  - _target_: modules.transforms.hftransforms.HFAddGaussianNoise
+    fields: ['x']
+    mean: 0
+    std: 0.003
+
+test:
+  _target_: torchvision.transforms.Compose
+  transforms:
+  - _target_: modules.transforms.hftransforms.HFStandardize2
+    fields_x: ${dataset.xcols}
+    fields_y: ${dataset.ycols}
+    mean: ${dataset.mean}
+    std: ${dataset.std}
+  - _target_: modules.transforms.hftransforms.HFAddGaussianNoise
+    fields: ['x']
+    mean: 0
+    std: 0.003

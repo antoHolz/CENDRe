@@ -1,0 +1,16 @@
+# @package _global_
+# Train pair for BearingPD.yaml (CE). Produces: BearingPD_{model}_tsHFNoise_s_adamw_patient__{seed}_
+defaults:
+  - override /transforms: tsHFNoise
+  - override /loader: s
+  - override /training: adamw_patient
+
+hydra:
+  mode: MULTIRUN
+  sweeper:
+    params:
+      dataset: BearingPD
+      model: InceptionTime10,ResNet1D18,DenseNet1D121
+      seed: 0,1
+      training.trainer.max_epochs: 50
+      training.trainer.min_epochs: 20

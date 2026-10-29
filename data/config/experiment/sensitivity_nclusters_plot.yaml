@@ -1,0 +1,54 @@
+# @package _global_
+# Aggregation/plot config for the n_clusters sensitivity sweep (both dataset families).
+# Run after sensitivity_nclusters_syntheticL/F and their _metrics counterparts have completed.
+defaults:
+  - override /transforms: tsHFbasic
+  - override /loader: M
+  - override /training: adamw_patient
+
+seeds: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+models: [InceptionTime10] #, ResNet1D18, DenseNet1D121
+methods: [ACsilhouette, HDBSCAN]
+datasets:
+  - circle-nothing_ch1_specificChannels
+  - squareorcircle-nothing_ch1_specificChannels
+  - midFreq-highFreq_ch1_specificChannels
+  - midFreq-highFreq_ch1_specificChannels_conf-midhighFreq-50-50
+dataset_family:
+  circle-nothing_ch1_specificChannels: syntheticL
+  squareorcircle-nothing_ch1_specificChannels: syntheticL
+  midFreq-highFreq_ch1_specificChannels: syntheticF
+  midFreq-highFreq_ch1_specificChannels_conf-midhighFreq-50-50: syntheticF
+n_clusters: [11, 21, 50, 73, 137, 257, 483, 907, 1704, 3200]
+n_clusters_ref: 50 # paper's chosen value; reference line and equivalence anchor
+eval_metrics: ['dst_eclad', 'rma']
+primary_eval_metric: rma
+# Response variables analysed, one figure row and one table each. K is the concept count the
+# auto-selection returns, read from the importances file.
+report_metrics: [sRC_rma, sIC_rma, K]
+# The swept ladder is only geometric above 73, so log_voronoi reweights the levels to the
+# log-uniform measure the variance-based index is defined against; uniform is the robustness column.
+grid_weighting: log_voronoi
+equivalence_margin: 0.02 # delta_fixed, in metric units; the seed-SD margin is per-cell
+equivalence_alpha: 0.05
+confidence: 0.95
+response_band: sd # band drawn on the response curves: sd or t (confidence)
+share_y: row # response-curve y-limits: row shares within a metric, all across the whole figure
+min_blocks_per_point: 3 # curve points backed by fewer surviving seeds are not drawn
+bootstrap_n: 2000 # seed resamples behind the S1 confidence interval
+bootstrap_seed: 0
+# Any COLUMN_SPECS key in task36_sensitivity_plot.py; mu_star, the Friedman test, Kendall's W
+# and the equivalence verdicts are still computed and stay in SI_<exp_name>.csv.
+table_columns: [S1_J, S1_seed, mu]
+dataset_label_breaks: ['_ch1', '_conf'] # table row labels wrap before each of these segments
+# LaTeX command wrapping the wrapped label: makecell[l] needs \usepackage{makecell},
+# shortstack[l] is in the kernel and needs nothing, '' emits the label unwrapped.
+table_col_width_cm: 4.4 # row-label column; the data columns all share one fixed width
+table_data_col_width_cm: 1.55
+# {metric} is replaced by the metric base (sRC, sIC); the float is labelled tab:sensitivity<base><eval>
+table_caption: 'Sensitivity of {metric} to the number of micro-clusters $J$. The columns $S_1^J$ and $S_1^{{\mathrm{{seed}}}}$ are the first-order Sobol indices of Equation~\ref{{eq:sobol}} for $J$ and for the random seed, and $\mu_{{EE}}$ is the mean elementary effect of Equation~\ref{{eq:ee}}, in units of {metric} per doubling of $J$. The final row averages each index over datasets.'
+method_labels:
+  ACsilhouette: 'CENDRe$_{\mathrm{silhouette}}$'
+  HDBSCAN: 'CENDRe$_{\mathrm{HDBSCAN}}$'
+save_pdf: true
+exp_name: sensitivity_nclusters

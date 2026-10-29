@@ -1,0 +1,18 @@
+# @package _global_
+defaults:
+  - override /transforms: tscHFNoiseWarp
+  - override /loader: xs
+  - override /training: adamw_patient
+
+hydra:
+  mode: MULTIRUN
+  sweeper:
+    params:
+      dataset: ECG200,ECG5000,ECGFiveDays,Epilepsy,GunPoint,FordA,FordB,Car,Earthquakes,Haptics,Wafer,SonyAIBORobotSurface1,SonyAIBORobotSurface2
+      model: InceptionTime10,ResNet1D18,DenseNet1D121 #,InceptionTime20
+      seed: 0
+      # ECLAD & MultiVISION run at 4 concepts; CENDRE ignores n_concepts (ACsilhouette default)
+      CE: CENDRE
+      CE.n_clusters: 50
+      CE.n_instances: 256
+      CE.clusterMode: ACsilhouette

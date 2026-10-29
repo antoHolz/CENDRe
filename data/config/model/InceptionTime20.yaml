@@ -1,0 +1,11 @@
+dimensionality: 1D
+name: InceptionTime20
+object:
+  _target_: modules.models.InceptionTime.InceptionTime
+  bottleneck: true
+  c_in: ${dataset.n_channels}
+  c_out: ${dataset.n_classes}
+  depth: 20
+  kernel_size: 40
+  nf: 32
+  residual: true

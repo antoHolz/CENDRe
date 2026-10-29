@@ -1,0 +1,19 @@
+# @package _global_
+defaults:
+  - override /transforms: tsHFbasic
+  - override /loader: M
+  - override /training: adamw_patient
+
+hydra: 
+  mode: MULTIRUN
+  sweeper:
+    params:
+      dataset: circle-nothing_ch2_random,square-nothing_ch2_random,triangle-nothing_ch2_random,triangle-circle_ch2_specificChannels,square-triangle_ch2_specificChannels,square-circle_ch2_specificChannels
+      model: InceptionTime10,ResNet1D18,DenseNet1D121 #,InceptionTime20
+      seed: 0,1,2 #,3,4 #,5,6,7,8,9
+      CE: CENDRE 
+      CE.clusterMode: ACsilhouette,HDBSCAN
+      CE.n_clusters: 50
+      CE.n_instances: 256
+      CE.domain: ['input', 'fourier']
+      CE.maskMode: gradient

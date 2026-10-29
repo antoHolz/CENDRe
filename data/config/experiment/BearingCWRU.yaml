@@ -1,0 +1,19 @@
+# @package _global_
+defaults:
+  - override /transforms: tsHFbasic
+  - override /loader: s
+  - override /training: adamw_patient
+
+hydra:
+  mode: MULTIRUN
+  sweeper:
+    params:
+      dataset: CWRU_Bearing
+      model: InceptionTime10,ResNet1D18,DenseNet1D121
+      seed: 0,1
+      CE: CENDRE
+      CE.clusterMode: ACsilhouette,HDBSCAN
+      CE.n_clusters: 50
+      CE.domain: ['input','fourier']
+      CE.n_instances: 256
+      CE.maskMode: gradient
