@@ -247,7 +247,12 @@ the workstation used for the reported runs).
 
 ## 6. Citation
 
-```bibtex
-% TODO: add bibtex entry on acceptance.
-```
+@article{holzapfel2026cendre,
+  title={CENDRe: Concept Extraction with Natural Domain Representations},
+  author={Holzapfel, Antonia and Moreno, Andres Felipe Posada and Trimpe, Sebastian},
+  journal={arXiv preprint arXiv:2607.29621},
+  year={2026}
+}
+
+(to be replaced with final citation upon publication)
 
